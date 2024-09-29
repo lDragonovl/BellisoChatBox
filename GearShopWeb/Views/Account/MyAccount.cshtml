@@ -1,0 +1,101 @@
+﻿@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "MyAccount";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+@model BusinessObject.Model.DataResult
+@{
+    var item = Model.Result as BusinessObject.Model.Page.AccountModel;
+
+}
+<section class="gallery_section layout_padding">
+<div style="margin-bottom: 30px;" class="heading_container justify-content-center">
+    <h2>
+        Quản lý tài khoản
+    </h2>
+</div>
+
+<!-- Contact Start -->
+<div class="container-fluid">
+  
+    <div class="row px-xl-5">
+        <div class="col-lg-4 mb-5">
+            <div class="contact-form bg-light p-30">
+                <div id="success"></div>
+                    <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                        <img style="border-radius: 50%;" alt=""
+                             src="https://secure.gravatar.com/avatar/9e0afa26bc1077afbf9bebfbbb0a9b41?s=70&amp;d=mm&amp;r=g"
+                             srcset="https://secure.gravatar.com/avatar/9e0afa26bc1077afbf9bebfbbb0a9b41?s=140&amp;d=mm&amp;r=g 2x"
+                             height="70" width="70" decoding="async">
+                        <p style="font-size: 20px;">Thông tin cá nhân</p>
+
+
+                        <div style="margin-bottom: 5px;">
+                            <a class="form-control_1" href="/Account/MyAccount" style="background-color:#ff8100;" style="text-decoration: none;">
+                                <i class="fa fa-user-circle " style="color: black; margin-right: 10px;"></i>Thông tin tài khoản
+                            </a>
+
+                        </div>
+
+                        <div style="margin-bottom: 5px;">
+                            <a class="form-control_1" " href="/Account/ChangePassword" style="text-decoration: none;">
+                                <i class="fa fa-key" style="color: black; margin-right: 10px;"></i>Đổi mật khẩu
+                            </a>
+
+                        </div>
+
+                        <div class="control-group" style="margin-bottom: 5px;">
+                            <a class="form-control_1" href="/Account/MyOrder" style="text-decoration: none;">
+                                <i class="fa fa-gift" style="color: black; margin-right: 10px;"></i>Đơn hàng
+                            </a>
+
+                        </div>
+                        <div class="control-group" style="margin-bottom: 5px;">
+                            <a class="form-control_1" href="/Account/MyAddress" style="text-decoration: none;">
+                                <i class="fa fa-home" style="color: black; margin-right: 10px;"></i>Địa chỉ
+                            </a>
+
+                        </div>
+                        <div class="control-group" style="margin-bottom: 5px;">
+                            <a class="form-control_1" href="#" onclick="handleLogout()" style="text-decoration: none;">
+                                <i class="fa fa-sign-out-alt" style="color: black; margin-right: 10px;"></i>Đăng xuất
+                            </a>
+                        </div>
+
+                    </form>
+            </div>
+        </div>
+
+        <div class="col-lg-8 mb-5">
+            <div class="bg-light p-30 mb-3" style="height: 100%;">
+                <form method="post" action="/Account/UpdateProfile" class="update_profile">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>Full name</label>
+                            <input class="form-control" id="fullnameUpdate" type="text" name="fullname" value="@item.Fullname">
+                            <p style="color:red; text-align:left"></p>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" id="emailUpdate" type="text" name="email" value="@item.Email">
+                            <p style="color:red; text-align:left"></p>
+                            <p style="color: red; text-align: left" id="smsEmail"></p>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Phone number</label>
+                            <input class="form-control" id="phoneUpdate" type="text" name="phone" value="@item.Phone">
+                            <p style="color:red; text-align:left"></p>
+                        </div>
+                        <div class="col-md-12 form-group" style="  text-align: center;">
+                            <input class="button-32" type="submit" value="Update" name="btnAddnewAddress">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Contact End -->
+<script src="~/js/address/addressvalidate.js"></script>

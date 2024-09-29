@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\Address.js" />
+    <Content Remove="wwwroot\js\AddressValidate.js" />
+    <Content Remove="wwwroot\js\OrderDetailForm.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\Address.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\AddressValidate.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\login\AddressNotification.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\OrderDetailForm.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\address\Address.js" />
+    <None Include="wwwroot\js\address\AddressValidate.js" />
+    <None Include="wwwroot\js\address\AddressNotification.js" />
+    <None Include="wwwroot\js\address\OrderDetailForm.js" />
+    <None Include="wwwroot\js\signalr\dist\browser\signalr.js" />
+    <None Include="wwwroot\js\signalr\dist\browser\signalr.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessObject\BusinessObject.csproj" />
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

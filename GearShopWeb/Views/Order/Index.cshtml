@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+
+    var model = Model.Result;
+
+    var userCartData = model.list as List<BusinessObject.Model.Page.UserCartData>;
+
+    var address = model.addresses as List<BusinessObject.Model.Page.DeliveryAddressModel>;
+}
+
+<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+
+<section class="gallery_section layout_padding">
+    <div style="margin-bottom: 30px;" class="heading_container justify-content-center">
+        <h2>
+            Thanh Toán
+        </h2>
+    </div>
+<!-- Checkout Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <h5 class="section-title position-relative text-uppercase mb-3">
+                <span class="tagcheck bg-secondary pr-3">
+                   Địa chỉ thanh toán
+                </span>
+            </h5>
+            <div class="bg-light p-30 mb-5">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Họ và tên</label>
+                        <input type="hidden" name="fullname" id="ChosenFNA" value="@address[0].Fullname">
+                        <p class="form-control" id="formFullname">@address[0].Fullname</p>
+                    </div>
+
+                    <div class="col-md-6 form-group">
+                        <label>Số điện thoại</label>
+                        <input type="hidden" name="phonenum" id="ChosenPNA" value="@address[0].Phone" />
+                        <p class="form-control" id="formPhone">@address[0].Phone</p>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Địa chỉ</label>
+                        @{
+                            var fullAddress = string.IsNullOrEmpty(address[0].Specific)
+                            ? address[0].Address
+                            : $"{address[0].Specific}, {address[0].Address}";
+                        }
+                        
+                        <input type="hidden" name="address" id="ChosenADA" value="@fullAddress" />
+                        <p class="form-control" id="formAddress">
+                            @fullAddress
+                        </p>
+                    </div>
+                    <br />
+                    <div class="col-md-12">
+                        <label>Ghi chú</label><br />
+                        <textarea cols="100" rows="4" id="description"></textarea>
+                    </div>
+                </div>
+                    <div class="ml-auto w-fit">
+                        <button class="!text-[#3d464c] !text-[20px] font-bold !bg-[#eeeeee] hover:!bg-[#9b9b98] p-2" onclick="ShowListAddress()">
+                            <ion-icon class="" name="location-outline"></ion-icon>
+                            <span class="!text-[16px]">Thay đổi địa chỉ</span>
+                        </button>
+                    </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <h5 class="section-title position-relative text-uppercase mb-3">
+                <span class="tagcheck bg-secondary pr-3">
+                        Thông tin đơn hàng
+                </span>
+            </h5>
+            <div class="bg-light p-30 mb-5">
+                <div class="border-bottom">
+                    <h6 class="mb-3">Danh sách sản phẩm</h6>
+                    @{
+                        double amount = 0;
+                    }
+                    @foreach (var item in userCartData)
+                    {
+                        <div class="d-flex justify-content-between">
+                            @{
+                                var totalPriceOfOneProduct = (item.Product.ProPrice - (item.Product.ProPrice * item.Product.Discount / 100)) * item.model.Quantity;
+                                amount += totalPriceOfOneProduct;
+                            }
+                                <p>@item.Product.ProName <span> x @item.model.Quantity</span></p>
+                                <p>@totalPriceOfOneProduct.ToString("N0")₫</p>
+                        </div>
+                    }
+                </div>
+                <div class="border-bottom pt-3 pb-2">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6>Tổng phụ</h6>
+                            <h6>@amount.ToString("N0")₫</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">25.000₫</h6>
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5>Tổng tiền</h5>
+                        @{
+                            var bill = amount + 25000;
+                        }
+                            <h5>@bill.ToString("N0")₫</h5>
+                        <input type="hidden" value="@bill" id="bill" />
+                    </div>
+                </div>
+                <div class="bg-light p-30">
+                    <input type="submit" class="btn btn-block btn-primary font-weight-bold py-3" onclick="PlaceOrder()" value="Thanh toán" style="color:black; ">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </section>
+    <!-- Checkout End -->
+
+
+    <div id="listAddress" style="display:none">
+        @Html.Partial("Partial/DeliveryAddress/List", address);
+    </div>
+
+    <div id="editAddress" style="display:none">
+        @Html.Partial("Partial/DeliveryAddress/Edit");
+    </div>
+
+    <div id="createAddress" style="display:none">
+        @Html.Partial("Partial/DeliveryAddress/Create");
+    </div>
+
+    <div id="alertOrder" style="display:none">
+        <div class="fixed top-0 left-0 bg-[rgba(0,0,0,.3)] h-[100%] w-[100%] z-[100]">
+            <div class="update-review fixed bg-slate-50 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-30 w-[30%] p-4">
+                <p>
+                    Some products in the shopping cart have just been updated, please
+                    check and try again.
+                </p>
+                <div class="flex justify-end">
+                    <button class="btn-common"><a class="text-white" style="text-decoration:none" href="/cart">OK</a></button>
+                </div>
+            </div>
+        </div>
+   </div>
+    <script src="~/js/address/addressvalidate.js"></script>
+    <script src="~/js/order/order.js"></script>

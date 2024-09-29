@@ -1,0 +1,309 @@
+﻿
+@{
+    ViewData["Title"] = "ProductDetail";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+@model BusinessObject.Model.DataResult
+
+@{
+    var productDetailModel = Model.Result as BusinessObject.Model.Page.ProductDetailModel;
+
+    var p = productDetailModel.productData;
+    var list = productDetailModel.products;
+}
+
+<!-- Shop Detail Start -->  
+<section style="background-color: #f5f5f500;" class="gallery_section layout_padding">
+
+<div class="container-fluid pb-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 mb-30">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner bg-light" style="text-align:center">
+                    @for (var i = 0; i < p.ProImg.Count(); i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img style="width: 700px; height: 650px; object-fit:contain;" src="@p.ProImg[i]" alt="Image">
+                        </div>
+                    }
+
+                </div>
+                <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                    <i class="fa fa-2x fa-angle-left text-dark"></i>
+                </a>
+                <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                    <i class="fa fa-2x fa-angle-right text-dark"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-7 h-auto mb-30">
+            <div class="h-100 bg-light p-30">
+                <h3>@p.ProName</h3>
+                    <div class="d-flex mb-3">
+                        <div class="text-primary mr-2">
+                            <small class="fas fa-star" style="color: #ff7941;"></small>
+                            <small class="fas fa-star" style="color: #ff7941;"></small>
+                            <small class="fas fa-star" style="color: #ff7941;"></small>
+                            <small class="fas fa-star-half-alt" style="color: #ff7941;"></small>
+                            <small class="far fa-star" style="color: #ff7941;"></small>
+                        </div>
+                        <small class="pt-1">(99 Reviews)</small>
+                    </div>
+            
+
+                @if (@p.Discount > 0)
+                {
+                    var priceDiscount = p.ProPrice - (p.ProPrice * p.Discount) / 100;
+
+                        <h3 class="text-muted ml-2"><del style="color: #155724; margin-left: -9px">@p.ProPrice.ToString("N0")₫</del></h3>
+                    priceDiscount = Math.Round(priceDiscount, 2);
+                        <h2 class="font-weight-semi-bold mb-4">@priceDiscount.ToString("N0")₫</h2>
+                }
+                else
+                {
+                        <h2 class="font-weight-semi-bold mb-4">@p.ProPrice.ToString("N0")₫</h2>
+                }
+
+                <p class="mb-4">
+                         @p.ProName mang đến sự sang trọng và mát mẻ cho căn phòng của bạn. Với thiết kế tinh tế, ánh sáng dịu nhẹ của đèn giúp tạo ra không gian thư giãn và thoải mái, lý tưởng cho những buổi tối ấm cúng.
+                </p>
+
+
+                <div class="d-flex align-items-center mb-3 pt-2">
+                    @if (p.ProQuan > 0 && p.IsAvailable == true)
+                    {
+                    <div class="input-group quantity mr-3" style="width: 130px;">
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary btn-minus">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                            <input type="text" class="form-control bg-secondary border-0 text-center" id="quan_input" data-amount="" onkeydown="return isValidInput(event)" value="1">
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary btn-plus">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                        <a class="btn btn-outline-orange btn-square" data-pro_quan_available="@p.ProQuan" data-cart_quan_current="0" data-model="@System.Text.Json.JsonSerializer.Serialize(p)" data-pro_id="@p.ProId" id="shopDetail_quan" data-quan_input="1" onclick="AddToCart(this)">
+                        <i class="fa fa-shopping-cart" style="color: #fff"> <span style="margin-left:5px"> </span>Thêm vào giỏ hàng</i>
+                    </a>
+                    @if (p.ProQuan == 1)
+                    {
+                        <div class="number-product ml-3" id="p-quan-avai" data-product_quan="@p.ProQuan">@p.ProQuan product available</div>
+                    }
+                    else
+                    {
+                        <div class="number-product ml-3" id="p-quan-avai" data-product_quan="@p.ProQuan">@p.ProQuan products available</div>
+                    }
+                    
+                }else{
+                        <div class="number-product ml-3" style="color:red;font-size:25px;"><strong>Product is unavailable</strong></div>
+                    }
+                </div>
+
+                <div class="d-flex pt-2">
+                    <div class="d-inline-flex">
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="bg-light p-30">
+                <div class="nav nav-tabs mb-4">
+                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Miêu tả</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Chi tiết vật liệu</a>
+                        <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Đánh giá (2)</a>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-pane-1">
+                        <h4 class="mb-3">@p.ProName Description</h4>
+                        <p>@p.ProDes</p>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-pane-2">
+                        <h4 class="mb-3" style="text-align: center;">Chi tiết vật liệu</h4>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush" style="font-weight: bold; color: rgb(62, 60, 60); text-align: center;">
+                                    @foreach (var item in p.ProAttribute)
+                                    {
+                                        <li class="list-group-item px-0">
+                                            @item.Key
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush" style="text-align: center;">
+                                    @foreach (var item in p.ProAttribute)
+                                    {
+                                        <li class="list-group-item px-0">
+                                            @item.Value
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="tab-pane fade" id="tab-pane-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="mb-4">2 đánh giá cho sản phẩm này</h4>
+                                    <div class="media mb-4">
+                                        <img src="images/client-1.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <div class="media-body">
+                                            <h6>Nghiêm Vũ Hoàng Long<small> - <i>01 Jan 2024</i></small></h6>
+                                            <div class="text-primary mb-2">
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                            </div>
+                                            <p>Đèn ngủ hoa cưới Belliso không chỉ đẹp mắt mà còn tạo ra không gian ấm cúng, lãng mạn. Tôi rất hài lòng với sản phẩm này và chắc chắn sẽ giới thiệu cho bạn bè.</p>
+                                        </div>
+                                    </div>
+                                    <div class="media mb-4">
+                                        <img src="images/client-2.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <div class="media-body">
+                                            <h6>Phạm Nam Hải<small> - <i>01 Jan 2024</i></small></h6>
+                                            <div class="text-primary mb-2">
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                                <i class="fas fa-star" style="color: #ff7941;"></i>
+                                            </div>
+                                            <p>Đèn ngủ hoa cưới Belliso thật sự là một tác phẩm nghệ thuật. Ánh sáng dịu nhẹ cùng thiết kế tinh tế giúp giấc ngủ của tôi trở nên thư giãn hơn. Rất đáng đồng tiền!</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <h4 class="mb-4">Để lại đáh giá</h4>
+                                    <small>Địa chỉ email của bạn sẽ không được công bố. Các trường bắt buộc được đánh dấu *</small>
+                                    <div class="d-flex my-3">
+                                        <p class="mb-0 mr-2">Đánh giá của bạn * :</p>
+                                        <div class="text-primary">
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="message">Đánh giá của bạn * *</label>
+                                            <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Tên của bạn *</label>
+                                            <input type="text" class="form-control" id="name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email của bạn *</label>
+                                            <input type="email" class="form-control" id="email">
+                                        </div>
+                                        <div class="form-group mb-0">
+                                            <input type="" value="Để lại đánh giá" class="btn btn-primary px-3">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop Detail End -->
+<!-- Products Start -->
+<div class="container-fluid py-5">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Có thể bạn sẽ thích</span></h2>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+
+
+
+                @foreach (var item in list)
+                {
+                    <div class="product-item bg-light">
+                        <div class="product-img position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="@item.ProImg[0]" alt="">
+                            <div class="product-action">
+                                <a class="btn btn-outline-dark btn-square"
+                                   data-pro_quan_available="@item.ProQuan"
+                                   data-cart_quan_current="0"
+                                   data-pro_id="@item.ProId"
+                                   onclick="AddToCart(this)">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </a>
+
+                                <a class="btn btn-outline-dark btn-square" href="/ProductDetail?ProId=@item.ProId"><i class="fa fa-search"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center py-4">
+                            <a class="h6 text-decoration-none text-truncate" href="">@item.ProName</a>
+                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                @if (item.Discount > 0)
+                                {
+                                    var priceDiscount = @item.ProPrice - (@item.ProPrice * @item.Discount) / 100;
+                                    priceDiscount = Math.Round(priceDiscount, 2);
+                                        <h5>@priceDiscount.ToString("N0")₫</h5>
+                                        <h6 class="text-muted ml-2"><del>@item.ProPrice.ToString("N0")₫</del></h6>
+                                }
+                                else
+                                {
+                                        <h5>@item.ProPrice.ToString("N0")₫</h5>
+                                }
+                            </div>                       
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Products End -->
+
+<div id="myModal-check" class="modal-check">
+
+    <!-- Modal content -->
+    <div class="modal-content-check">
+        <div class="wrapper-check">
+            <div class="tick-check"></div>
+        </div>
+        <p>Sản phẩm đã được thêm vào giỏ hàng</p>
+    </div>
+
+</div>
+
+<div id="myModal-x" class="modal-x">
+    <div class="modal-content-x">
+        <div class="wrapper-x">
+            <div class="x-check"></div>
+        </div>
+        <h3>Sản phẩm thêm vào đã đạt số lượng tối đa</h3>
+    </div>
+</div>
+</section>

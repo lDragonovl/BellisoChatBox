@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var username = Context.Session.GetString("username");
+}
+<div style="margin-top:50px; margin-bottom:50px;">
+<div className="my-0 mx-auto h-[650px] text-center" style="text-align:center">
+    <div className="rounded-[50%] my-[20px]" style="display:flex; justify-content:center">
+        <img className="w-[200px] m-auto"
+             src="https://cdn-icons-png.freepik.com/512/641/641813.png"
+             alt="Post checkout picture" />
+    </div>
+
+        <h1 className="text-[#0aa38f] mt-[20px]">Đặt hàng thành công!</h1>
+
+        <div className="mt-[20px] border-t-[2px] border-solid border-[#333]"></div>
+        <p className="font-bold mt-[20px] text-[17px] text-[#333] ml-[20px]">
+            Cảm ơn bạn đã mua sắm tại Belliso!
+        </p>
+        <p className="text-[17px] text-[#333] ml-[20px]">
+            Đơn hàng của bạn sẽ được xử lý và chúng tôi sẽ nhanh chóng giao hàng đến địa chỉ bạn đã cung cấp.
+            <br />
+            Bộ phận phụ trách sẽ chủ động liên hệ với bạn sớm nhất có thể.
+            <br />
+            Trong trường hợp bạn cần hỗ trợ khẩn cấp, vui lòng liên hệ Hotline:
+            <span className="text-[24px] text-red-500">+012 345 6789</span>
+        </p>
+        <p className="text-[17px] text-[#333] ml-[20px]">
+            Cảm ơn bạn đã tin tưởng và lựa chọn dịch vụ của chúng tôi!
+        </p>
+
+        <div className="flex justify-center gap-3">
+            <buton className="flex text-white py-[10px] px-[20px] rounded-[5px] no-underline mt-[20px]" style="background-color:#0aa38f; padding: 10px 20px; border-radius:5px; margin-top:20px;color:#fff; margin-right:10px; cursor:pointer"
+                   onclick="handleLinkClick('/shop')">
+                Tiếp tục mua sắm
+            </buton>
+            <buton className="flex text-white py-[10px] px-[20px] rounded-[5px] no-underline mt-[20px]" style="background-color:#0aa38f; padding: 10px 20px; border-radius:5px; margin-top:20px;color:#fff; cursor:pointer;"
+                   onclick="handleLinkClick('/Account/MyOrder')">
+                Xem chi tiết đơn hàng
+            </buton>
+        </div>
+
+</div>
+</div>
+<script>
+    $(document).ready(function () { 
+        let isCompletechecout = sessionStorage.getItem("completeCheckout");
+        if (!isCompletechecout) {
+            window.location.href = "/Cart";
+        }
+    })
+
+    const handleLinkClick = async (link) => {
+        await sessionStorage.removeItem("completeCheckout");
+        window.location.href = link;
+    }
+</script>
